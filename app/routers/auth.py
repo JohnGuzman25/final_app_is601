@@ -86,7 +86,6 @@ def login(username: str = Form(...), password: str = Form(...), db: Session = De
 @router.post("/login-ui")
 def login_ui(username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     # UI helper: login and store token in cookie
-    user = db.query(User).filter(User.username == username).first()
     if not user or not verify_password(password, user.hashed_password):
         return templates.TemplateResponse("login.html", {"request": {"method": "GET"}, "error": "Invalid credentials"})
     if not user.is_verified:
