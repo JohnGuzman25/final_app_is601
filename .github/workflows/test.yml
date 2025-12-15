@@ -55,6 +55,9 @@ jobs:
       - name: Run tests
         env:
           PYTHONPATH: ${{ github.workspace }}
-          DATABASE_URL: sqlite:///./test.db
-        run: python -m pytest -q
+        run: |
+          pwd
+          ls -la
+          python -c "import app; import app.main; print('app import OK')"
+          pytest -q
 
