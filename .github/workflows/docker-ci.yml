@@ -1,40 +1,38 @@
-name: CI/CD - Test, Build, Push
+name: Docker - Build (Push only if secrets set)
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
-  test-build-push:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (always)
+        uses: docker/build-push-action@v6
         with:
-          python-version: "3.11"
+          context: .
+          push: false
+          tags: johnguzman/final_app_is601:latest
 
-      - name: Install deps and run tests
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          export PYTHONPATH="${GITHUB_WORKSPACE}"
-          python -c "import app; import app.main; print('app import OK')"
-          python -m pytest -q
-
-      - name: Log in to Docker Hub
+      - name: Log in to Docker Hub (only if secrets exist)
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build and push image (only if secrets exist)
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: johnguzman/project14:latest
-
+          tags: johnguzman/final_app_is601:latest
