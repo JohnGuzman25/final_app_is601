@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">Transactions</h1>
+
+  {% if error %}<div class="bg-red-100 text-red-800 p-2 rounded mb-3">{{ error }}</div>{% endif %}
+
+  <div class="bg-white p-4 rounded-xl shadow mb-6">
+    <form method="post" action="/transactions/add" class="grid grid-cols-1 md:grid-cols-5 gap-3">
+      <select class="border p-2 rounded" name="tx_type">
+        <option value="income">income</option>
+        <option value="expense">expense</option>
+      </select>
+      <input class="border p-2 rounded" name="category" placeholder="Category (Food, Rent...)" required />
+      <input class="border p-2 rounded" name="note" placeholder="Note (optional)" />
+      <input class="border p-2 rounded" name="amount" placeholder="Amount" type="number" step="0.01" required />
+      <button class="bg-blue-600 text-white p-2 rounded">Add</button>
+    </form>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow">
+    {% if txs|length == 0 %}
+      <div class="text-gray-500">No transactions yet.</div>
+    {% else %}
+      <table class="w-full text-left">
+        <thead>
+          <tr class="text-gray-500">
+            <th class="py-2">Type</th>
+            <th>Category</th>
+            <th>Note</th>
+            <th class="text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          {% for t in txs %}
+            <tr>
+              <td class="py-2">{{ t.tx_type }}</td>
+              <td>{{ t.category }}</td>
+              <td>{{ t.note }}</td>
+              <td class="text-right font-semibold">${{ '%.2f'|format(t.amount) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}
