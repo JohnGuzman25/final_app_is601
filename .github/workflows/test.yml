@@ -52,11 +52,9 @@ jobs:
             sleep 2
           done
 
-- name: Run tests
-  env:
-    PYTHONPATH: ${{ github.workspace }}
-    DATABASE_URL: sqlite:///./test.db
-  run: pytest -q
-
-
+      - name: Run tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+          DATABASE_URL: sqlite:///./test.db
+        run: python -m pytest -q
 
