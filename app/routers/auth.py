@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from app.database import get_db, Base, engine
+from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate
 from app.schemas.token import TokenResponse
@@ -15,7 +15,6 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="templates")
 
 # create tables (simple + fast)
-Base.metadata.create_all(bind=engine)
 
 
 @router.get("/register", response_class=HTMLResponse)
