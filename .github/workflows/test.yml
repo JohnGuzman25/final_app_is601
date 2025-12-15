@@ -52,6 +52,10 @@ jobs:
             sleep 2
           done
 
-      - name: Run tests
-        run: pytest
+	- name: Run tests
+  env:
+    PYTHONPATH: .
+    DATABASE_URL: sqlite:///./test.db
+  run: pytest -q
+
 
