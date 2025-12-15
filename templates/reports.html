@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-2">Reports</h1>
+  <p class="text-gray-600 mb-6">Live stats pulled from the database.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white rounded-lg shadow p-5">
+      <div class="text-sm text-gray-500">Total Calculations</div>
+      <div class="text-3xl font-semibold text-gray-900 mt-2">{{ total_calcs }}</div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-5">
+      <div class="text-sm text-gray-500">Your Calculations</div>
+      <div class="text-3xl font-semibold text-gray-900 mt-2">{{ my_calcs }}</div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-5">
+      <div class="text-sm text-gray-500">Latest Calculation</div>
+      <div class="text-lg font-medium text-gray-900 mt-3">
+        {% if latest_calc_at %}
+          {{ latest_calc_at }}
+        {% else %}
+          None yet
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <a href="/dashboard" class="text-blue-700 hover:underline">← Back to Dashboard</a>
+  </div>
+</div>
+
+{% endblock %}
+

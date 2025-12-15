@@ -1,26 +1,16 @@
+# app/database.py
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from app.core.config import settings
 
-from app.core_config import settings
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
-
-class Base(DeclarativeBase):
-    pass
-
-
-def get_engine():
-    if settings.DATABASE_URL.startswith("sqlite"):
-        return create_engine(
-            settings.DATABASE_URL,
-            connect_args={"check_same_thread": False},
-            pool_pre_ping=True,
-        )
-    return create_engine(settings.DATABASE_URL, pool_pre_ping=True)
-
-
-engine = get_engine()
+# Create the default engine and sessionmaker
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+Base = declarative_base()
 
 def get_db():
     db = SessionLocal()
@@ -29,3 +19,11 @@ def get_db():
     finally:
         db.close()
 
+# --- New Functions Added ---
+def get_engine(database_url: str = SQLALCHEMY_DATABASE_URL):
+    """Factory function to create a new SQLAlchemy engine."""
+    return create_engine(database_url)
+
+def get_sessionmaker(engine):
+    """Factory function to create a new sessionmaker bound to the given engine."""
+    return sessionmaker(autocommit=False, autoflush=False, bind=engine)
